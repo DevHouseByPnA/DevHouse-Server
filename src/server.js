@@ -4,8 +4,10 @@ const dotenv = require('dotenv');
 dotenv.config({ path: __dirname + '/../.env' });
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const { connectDB } = require('./config/db');
 const { ENVIRONMENT, PORT } = require('./constants');
+const { userRoute } = require('./routes/user.route');
 
 const initaliazeServer = async () => {
     console.log(chalk.grey('starting server...'));
@@ -14,22 +16,22 @@ const initaliazeServer = async () => {
 
     const app = express();
 
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json({ limit: '1mb' }));
+    app.use(cors());
+
     // Dev Logging middleware
     if (ENVIRONMENT === 'development') {
         app.use(morgan('dev'));
     }
 
-    app.get('/', (req, res) => {
-        res.json({
-            message: 'Hello World!',
+    app.get('/', (_req, res) => {
+        return res.json({
+            message: 'Welcome to DevHouse!',
         });
     });
 
-    app.get('/sample', (req, res) => {
-        res.json({
-            message: 'sample',
-        });
-    });
+    app.use('/users', userRoute);
 
     const server = app.listen(PORT, () => {
         console.log(chalk.blue(`server running in ${ENVIRONMENT} mode on port: ${PORT}`));
