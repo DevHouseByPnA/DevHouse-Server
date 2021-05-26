@@ -27,7 +27,6 @@ exports.getVerifiedUser = async (authToken) => {
 }
 
 exports.authMiddleware = async (req, res, next) => {
-    console.log('Auth middleware!');
     try {
         const authToken = req.headers.authorization || '';
         const currentUser = await this.getVerifiedUser(authToken);

@@ -6,7 +6,8 @@ const userRoute = Router();
 
 userRoute
     .route('/')
-    .get(authMiddleware, UserController.getAllUsers);
+    .get(authMiddleware, UserController.getAllUsers)
+    .post(authMiddleware, UserController.createUser);
 
 module.exports = {
     userRoute,

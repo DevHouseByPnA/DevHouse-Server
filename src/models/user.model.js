@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
     skills: {
         type: [String],
     }
-});
+}, { timestamps: true });
 
 UserSchema.index({
     email: 'text',

@@ -33,6 +33,12 @@ class UserService {
     static createNewUser = async (userData) => {
         const { name, email, authId, photoURL } = userData;
         try {
+            const existingUser = await User.findOne({ authId });
+
+            if (existingUser) {
+                return existingUser;
+            }
+
             const newUser = new User({
                 name,
                 email,
