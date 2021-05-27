@@ -9,28 +9,27 @@ class UserService {
             console.log(error);
             throw new Error('something went wrong');
         }
-    }
+    };
 
-    static getOneUserByAuthId = async (authId) => {
+    static getOneUserByAuthId = async authId => {
         try {
             const user = await User.findOne({ auth_id: authId });
             return user;
         } catch (error) {
             throw new Error('something went wrong');
         }
-    }
+    };
 
-    static getOneUserByEmail = async (userEmail) => {
+    static getOneUserByEmail = async userEmail => {
         try {
             const user = await User.findOne({ email: userEmail });
             return user;
         } catch (error) {
             throw new Error('something went wrong');
         }
-    }
+    };
 
-
-    static createNewUser = async (userData) => {
+    static createNewUser = async userData => {
         const { name, email, authId, photoURL } = userData;
         try {
             const existingUser = await User.findOne({ authId });
@@ -53,9 +52,9 @@ class UserService {
         } catch (error) {
             throw new Error('something went wrong');
         }
-    }
+    };
 
-    static updateUser = async (userData) => {
+    static updateUser = async userData => {
         const { name, authId, skills, about } = userData;
         try {
             /** @type {any} */
@@ -65,7 +64,8 @@ class UserService {
                 throw Error();
             }
 
-            const newSkills = skills?.filter(skill => !user.skills.includes(skill)) || [];
+            const newSkills =
+                skills?.filter(skill => !user.skills.includes(skill)) || [];
 
             user.name = name?.trim() || user.name;
             user.skills = [...user.skills, ...newSkills];
@@ -77,9 +77,9 @@ class UserService {
         } catch (error) {
             throw new Error('something went wrong');
         }
-    }
+    };
 }
 
 module.exports = {
-    UserService
+    UserService,
 };
