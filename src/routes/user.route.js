@@ -9,6 +9,11 @@ userRoute
     .get(authMiddleware, UserController.getAllUsers)
     .post(authMiddleware, UserController.createUser);
 
+userRoute
+    .route('/profile')
+    .put(authMiddleware, UserController.updateUser);
+
+
 module.exports = {
     userRoute,
 }

@@ -54,6 +54,30 @@ class UserService {
             throw new Error('something went wrong');
         }
     }
+
+    static updateUser = async (userData) => {
+        const { name, authId, skills, about } = userData;
+        try {
+            /** @type {any} */
+            const user = await User.findOne({ authId });
+
+            if (!user) {
+                throw Error();
+            }
+
+            const newSkills = skills?.filter(skill => !user.skills.includes(skill)) || [];
+
+            user.name = name?.trim() || user.name;
+            user.skills = [...user.skills, ...newSkills];
+            user.about = about;
+
+            await user.save();
+
+            return user;
+        } catch (error) {
+            throw new Error('something went wrong');
+        }
+    }
 }
 
 module.exports = {

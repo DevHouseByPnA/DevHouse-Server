@@ -26,7 +26,28 @@ class UserController {
                 photoURL,
             });
 
-            return res.status(200).json({ user: createdUser, message: 'successfully created new user' });
+            return res.status(201).json({ user: createdUser, message: 'successfully created new user' });
+        } catch (error) {
+            return res.status(500).json({
+                error: {
+                    message: error.message,
+                }
+            });
+        }
+    }
+
+    static updateUser = async (req, res) => {
+        try {
+            const { user: { uid }, body: { name, skills, about } } = req;
+
+            const updatedUser = await UserService.updateUser({
+                authId: uid,
+                name,
+                skills,
+                about,
+            });
+
+            return res.status(200).json({ user: updatedUser, message: 'successfully updated user' });
         } catch (error) {
             return res.status(500).json({
                 error: {
