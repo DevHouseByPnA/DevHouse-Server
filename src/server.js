@@ -8,6 +8,7 @@ const cors = require('cors');
 const { connectDB } = require('./config/db');
 const { ENVIRONMENT, PORT } = require('./constants');
 const { userRoute } = require('./routes/user.route');
+const { projectRoute } = require('./routes/project.route');
 
 const initaliazeServer = async () => {
     console.log(chalk.grey('starting server...'));
@@ -32,6 +33,7 @@ const initaliazeServer = async () => {
     });
 
     app.use('/users', userRoute);
+    app.use('/projects', projectRoute);
 
     const server = app.listen(PORT, () => {
         console.log(chalk.blue(`server running in ${ENVIRONMENT} mode on port: ${PORT}`));
