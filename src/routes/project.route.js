@@ -6,9 +6,9 @@ const projectRoute = Router();
 
 projectRoute
     .route('/')
-    .get(authMiddleware, ProjectController.getAllProjects);
-
+    .get(authMiddleware, ProjectController.getAllProjects)
+    .post(authMiddleware, ProjectController.createProject);
 
 module.exports = {
     projectRoute,
-}
+};

@@ -27,6 +27,7 @@ class ProjectController {
                 },
             } = req;
 
+            /** @type {any} */
             const newProject = await ProjectService.createNewProject(uid, {
                 name,
                 description,
@@ -37,7 +38,7 @@ class ProjectController {
 
             return res.status(200).json({
                 project: newProject,
-                message: `successfully created project ${project.name}`,
+                message: `successfully created project ${newProject.name}`,
             });
         } catch (error) {
             return res.status(500).json({
