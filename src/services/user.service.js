@@ -11,6 +11,15 @@ class UserService {
         }
     };
 
+    static getOneUserByUserId = async userId => {
+        try {
+            const user = await User.findById(userId);
+            return user;
+        } catch (error) {
+            throw new Error('something went wrong');
+        }
+    };
+
     static getOneUserByAuthId = async authId => {
         try {
             const user = await User.findOne({ authId });
