@@ -1,5 +1,6 @@
 const { Project } = require('../models/project.model');
 const { UserService } = require('../services/user.service');
+const { WorkspaceService } = require('../services/workspace.service');
 
 class ProjectService {
     static getAllProjects = async () => {
@@ -18,7 +19,7 @@ class ProjectService {
                 name,
                 description,
                 requiredSkills,
-                peopleRequired,
+                peopleRequireud,
                 githubRepos,
             } = projectData;
 
@@ -52,6 +53,7 @@ class ProjectService {
             });
 
             await newProject.save();
+            await WorkspaceService.createWorkspace(user.id, newProject.id, `workspace<${newProject.name}>`);
             return newProject;
         } catch (error) {
             throw error;

@@ -13,7 +13,7 @@ class UserService {
 
     static getOneUserByAuthId = async authId => {
         try {
-            const user = await User.findOne({ auth_id: authId });
+            const user = await User.findOne({ authId });
             return user;
         } catch (error) {
             throw new Error('something went wrong');
