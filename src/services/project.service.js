@@ -5,7 +5,7 @@ const { WorkspaceService } = require('../services/workspace.service');
 class ProjectService {
     static getAllProjects = async () => {
         try {
-            const projects = await Project.find();
+            const projects = await Project.find().populate('mentor');
             return projects;
         } catch (error) {
             console.log(error);
@@ -41,7 +41,8 @@ class ProjectService {
             if (!user) {
                 throw Error('mentor not found');
             }
-            /** @type {any} */
+
+            /**@type {any} */
             const newProject = new Project({
                 name,
                 description,
@@ -53,13 +54,14 @@ class ProjectService {
             });
 
             await newProject.save();
+            await newProject.populate('mentor').execPopulate();
             console.log(newProject);
             await WorkspaceService.createWorkspace(
                 user._id,
                 newProject._id,
                 `workspace<${newProject.name}>`
             );
-            return newProject;
+            return newProject.populate('mentor');
         } catch (error) {
             console.log(error);
             throw error;
