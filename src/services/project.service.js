@@ -19,7 +19,7 @@ class ProjectService {
                 name,
                 description,
                 requiredSkills,
-                peopleRequireud,
+                peopleRequired,
                 githubRepos,
             } = projectData;
 
@@ -41,7 +41,7 @@ class ProjectService {
             if (!user) {
                 throw Error('mentor not found');
             }
-
+            /** @type {any} */
             const newProject = new Project({
                 name,
                 description,
@@ -53,9 +53,15 @@ class ProjectService {
             });
 
             await newProject.save();
-            await WorkspaceService.createWorkspace(user.id, newProject.id, `workspace<${newProject.name}>`);
+            console.log(newProject);
+            await WorkspaceService.createWorkspace(
+                user._id,
+                newProject._id,
+                `workspace<${newProject.name}>`
+            );
             return newProject;
         } catch (error) {
+            console.log(error);
             throw error;
         }
     };

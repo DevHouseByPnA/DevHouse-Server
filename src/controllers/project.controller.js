@@ -27,12 +27,13 @@ class ProjectController {
                 },
             } = req;
 
+            console.log(req.body);
             /** @type {any} */
             const newProject = await ProjectService.createNewProject(uid, {
                 name,
                 description,
                 requiredSkills,
-                peopleRequired,
+                peopleRequired: +peopleRequired,
                 githubRepos,
             });
 
