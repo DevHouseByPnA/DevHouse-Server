@@ -1,8 +1,57 @@
 const { UserService } = require('./user.service');
 const { Request } = require('../models/request.model');
 const { WorkspaceService } = require('./workspace.service');
+const { ProjectService } = require('./project.service');
 
 class RequestService {
+    static getRequestsCreatedByAUser = async userAuthId => {
+        try {
+            const user = await UserService.getOneUserByAuthId(userAuthId);
+            if (!user) {
+                throw new Error('user not found');
+            }
+
+            const requests = await Request.find({ sender: user._id })
+                .populate('sender')
+                .populate({
+                    path: 'project',
+                    populate: {
+                        path: 'mentor',
+                        model: 'User',
+                    },
+                })
+                .exec();
+            return requests;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    static getRequestsReceivedByAUser = async userAuthId => {
+        try {
+            const user = await UserService.getOneUserByAuthId(userAuthId);
+            if (!user) {
+                throw new Error('user not found');
+            }
+
+            const requests = await Request.find()
+                .populate('sender')
+                .populate({
+                    path: 'project',
+                    populate: {
+                        path: 'mentor',
+                        model: 'User',
+                        match: { _id: user._id },
+                    },
+                })
+                .exec();
+
+            return requests;
+        } catch (error) {
+            throw error;
+        }
+    };
+
     static getRequestById = async reqId => {
         try {
             const request = await Request.findById(reqId);
@@ -28,6 +77,13 @@ class RequestService {
                 sendingUserAuthId
             );
             if (!sender) throw new Error('user not found');
+
+            /** @type {any} */
+            const project = await ProjectService.getProjectById(projectId);
+
+            if (sender.id === project.mentor.id) {
+                throw new Error('cannot send request to your own project');
+            }
 
             const request = new Request({
                 sender: sender._id,
