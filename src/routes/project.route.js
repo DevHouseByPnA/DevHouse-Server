@@ -9,6 +9,8 @@ projectRoute
     .get(authMiddleware, ProjectController.getAllProjects)
     .post(authMiddleware, ProjectController.createProject);
 
+projectRoute.route('/:id').get(authMiddleware, ProjectController.getProject);
+
 module.exports = {
     projectRoute,
 };

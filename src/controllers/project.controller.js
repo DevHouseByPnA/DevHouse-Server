@@ -14,6 +14,23 @@ class ProjectController {
         }
     };
 
+    static getProject = async (req, res) => {
+        const {
+            params: { id },
+        } = req;
+
+        try {
+            const project = await ProjectService.getProjectById(id);
+            return res.status(200).json({ project });
+        } catch (error) {
+            return res.status(500).json({
+                error: {
+                    message: error.message,
+                },
+            });
+        }
+    };
+
     static createProject = async (req, res) => {
         try {
             const {

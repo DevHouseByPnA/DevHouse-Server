@@ -13,6 +13,18 @@ class ProjectService {
         }
     };
 
+    static getProjectById = async projectId => {
+        try {
+            const project = await Project.findById(projectId).populate(
+                'mentor'
+            );
+            return project;
+        } catch (error) {
+            console.log(error);
+            throw new Error('something went wrong');
+        }
+    };
+
     static createNewProject = async (authId, projectData) => {
         try {
             const {
