@@ -10,6 +10,7 @@ const { ENVIRONMENT, PORT } = require('./constants');
 const { userRoute } = require('./routes/user.route');
 const { projectRoute } = require('./routes/project.route');
 const { workspaceRoute } = require('./routes/workspace.route');
+const { requestRoute } = require('./routes/request.route');
 
 const initaliazeServer = async () => {
     console.log(chalk.grey('starting server...'));
@@ -36,6 +37,7 @@ const initaliazeServer = async () => {
     app.use('/users', userRoute);
     app.use('/projects', projectRoute);
     app.use('/workspaces', workspaceRoute);
+    app.use('/requests', requestRoute);
 
     const server = app.listen(PORT, () => {
         console.log(

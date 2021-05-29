@@ -44,6 +44,17 @@ class WorkspaceService {
             throw error;
         }
     };
+
+    static addMember = async (userId, projectId) => {
+        try {
+            /** @type {any} */
+            const workspace = await Workspace.findOne({ project: projectId });
+            workspace.members.push(userId);
+            await workspace.save();
+        } catch (error) {
+            throw error;
+        }
+    };
 }
 
 module.exports = {
