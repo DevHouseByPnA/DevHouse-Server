@@ -53,14 +53,17 @@ class UserController {
     static createUser = async (req, res, _next) => {
         try {
             const {
-                user: { uid, email, displayName, photoURL },
+                user: { uid, email, displayName, photoURL, github },
             } = req;
+
+            // console.log(req.user);
 
             const createdUser = await UserService.createNewUser({
                 name: displayName,
                 email,
                 authId: uid,
                 photoURL,
+                github,
             });
 
             return res.status(201).json({

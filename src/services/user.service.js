@@ -39,7 +39,7 @@ class UserService {
     };
 
     static createNewUser = async userData => {
-        const { name, email, authId, photoURL } = userData;
+        const { name, email, authId, photoURL, github } = userData;
         try {
             const existingUser = await User.findOne({ authId });
 
@@ -54,6 +54,7 @@ class UserService {
                 profilePicURL: photoURL,
                 skills: [],
                 about: '',
+                github,
             });
 
             await newUser.save();

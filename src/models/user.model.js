@@ -1,30 +1,37 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        index: true,
-        unique: true,
+const UserSchema = new mongoose.Schema(
+    {
+        email: {
+            type: String,
+            index: true,
+            unique: true,
+        },
+        authId: {
+            type: String,
+            index: true,
+            required: true,
+            unique: true,
+        },
+        name: {
+            type: String,
+        },
+        profilePicURL: {
+            type: String,
+        },
+        about: {
+            type: String,
+        },
+        skills: {
+            type: [String],
+        },
+        github: {
+            username: String,
+            profileURL: String,
+        },
     },
-    authId: {
-        type: String,
-        index: true,
-        required: true,
-        unique: true,
-    },
-    name: {
-        type: String,
-    },
-    profilePicURL: {
-        type: String,
-    },
-    about: {
-        type: String,
-    },
-    skills: {
-        type: [String],
-    }
-}, { timestamps: true });
+    { timestamps: true }
+);
 
 UserSchema.index({
     email: 'text',
@@ -35,5 +42,5 @@ UserSchema.index({
 const User = mongoose.model('User', UserSchema);
 
 module.exports = {
-    User
+    User,
 };
