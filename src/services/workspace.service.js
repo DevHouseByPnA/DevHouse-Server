@@ -15,7 +15,10 @@ class WorkspaceService {
     static getWorkspaceById = async workspaceId => {
         try {
             const workspace = await Workspace.findById(workspaceId);
-            await workspace.populate('members').execPopulate();
+            await workspace
+                .populate('project')
+                .populate('members')
+                .execPopulate();
             return workspace;
         } catch (error) {
             console.log(error);
@@ -46,12 +49,18 @@ class WorkspaceService {
             /** @type {any} */
             const workspaces = await Workspace.find();
 
+            /** @type {any[]} */
             let workspacesOfUser = workspaces.filter(w =>
                 w.members.includes(user.id)
             );
+
             workspacesOfUser = await Promise.all(
                 workspacesOfUser.map(
-                    async w => await w.populate('members').execPopulate()
+                    async w =>
+                        await w
+                            .populate('project')
+                            .populate('members')
+                            .execPopulate()
                 )
             );
 

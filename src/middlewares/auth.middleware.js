@@ -6,7 +6,6 @@ const userNotFoundError = new Error('User not found');
 const getUserDetails = async uid => {
     try {
         const currentUser = await firebaseAdmin.auth().getUser(uid);
-        console.log(currentUser.providerData);
         return currentUser;
     } catch (error) {
         throw userNotFoundError;
