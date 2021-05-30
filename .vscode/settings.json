@@ -2,4 +2,5 @@
     "javascript.validate.enable": true,
     "typescript.validate.enable": false,
     "editor.formatOnSave": true,
+    "javascript.format.enable": true
 }
