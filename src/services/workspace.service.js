@@ -12,6 +12,17 @@ class WorkspaceService {
         }
     };
 
+    static getWorkspaceById = async workspaceId => {
+        try {
+            const workspace = await Workspace.findById(workspaceId);
+            await workspace.populate('members').execPopulate();
+            return workspace;
+        } catch (error) {
+            console.log(error);
+            throw new Error('something went wrong');
+        }
+    };
+
     static createWorkspace = async (userId, projectId, name) => {
         try {
             const workspace = new Workspace({
@@ -32,14 +43,19 @@ class WorkspaceService {
             const user = await UserService.getOneUserByAuthId(authId);
             if (!user) throw new Error('User Not Found');
 
-            const workspaces = await Workspace.find()
-                .populate({
-                    path: 'members',
-                    match: { _id: user.id },
-                })
-                .exec();
+            /** @type {any} */
+            const workspaces = await Workspace.find();
 
-            return workspaces;
+            let workspacesOfUser = workspaces.filter(w =>
+                w.members.includes(user.id)
+            );
+            workspacesOfUser = await Promise.all(
+                workspacesOfUser.map(
+                    async w => await w.populate('members').execPopulate()
+                )
+            );
+
+            return workspacesOfUser;
         } catch (error) {
             throw error;
         }

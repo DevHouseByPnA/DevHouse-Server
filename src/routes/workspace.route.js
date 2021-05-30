@@ -6,7 +6,11 @@ const workspaceRoute = Router();
 
 workspaceRoute
     .route('/')
-    .get(authMiddleware, WorkspaceController.getAllWorkspaces);
+    .get(authMiddleware, WorkspaceController.getWorkspacesOfUser);
+
+workspaceRoute
+    .route('/:id')
+    .get(authMiddleware, WorkspaceController.getWorkspaceById);
 
 module.exports = {
     workspaceRoute,
