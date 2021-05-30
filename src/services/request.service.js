@@ -34,6 +34,7 @@ class RequestService {
                 throw new Error('user not found');
             }
 
+            /** @type {any} */
             const requests = await Request.find()
                 .populate('sender')
                 .populate({
@@ -41,12 +42,11 @@ class RequestService {
                     populate: {
                         path: 'mentor',
                         model: 'User',
-                        match: { _id: user._id },
                     },
                 })
                 .exec();
 
-            return requests;
+            return requests.filter(req => req.project.mentor.id === user.id);
         } catch (error) {
             throw error;
         }

@@ -36,7 +36,12 @@ exports.authMiddleware = async (req, res, next) => {
         const currentUser = await this.getVerifiedUser(authToken);
         req.user = currentUser;
         const githubResponse = await axios.get(
-            `https://api.github.com/user/${currentUser.providerData[0].uid}`
+            `https://api.github.com/user/${currentUser.providerData[0].uid}`,
+            {
+                headers: {
+                    Authorization: `token ${req.headers.githubtoken}`,
+                },
+            }
         );
         if (githubResponse.status < 400) {
             req.user.github = {
@@ -46,6 +51,7 @@ exports.authMiddleware = async (req, res, next) => {
         }
         next();
     } catch (error) {
+        // console.log('Auth Middleware Error: ', error);
         return res.status(401).json({
             error: {
                 message: error.message,
