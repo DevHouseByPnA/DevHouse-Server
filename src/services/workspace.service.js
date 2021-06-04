@@ -1,5 +1,6 @@
 const { Workspace } = require('../models/workspace.model');
 const { UserService } = require('./user.service');
+const { TodoListService } = require('../services/todolist.service')
 
 class WorkspaceService {
     static getAllWorkspaces = async () => {
@@ -16,7 +17,13 @@ class WorkspaceService {
         try {
             const workspace = await Workspace.findById(workspaceId);
             await workspace
-                .populate('project')
+                .populate({
+                    path: 'project',
+                    populate: {
+                        path: 'mentor',
+                        model: 'User',
+                    },
+                })
                 .populate('members')
                 .execPopulate();
             return workspace;
@@ -34,6 +41,7 @@ class WorkspaceService {
                 members: [userId],
             });
             await workspace.save();
+            await TodoListService.createTodoList(workspace.id);
             return workspace;
         } catch (error) {
             throw error;
@@ -58,7 +66,13 @@ class WorkspaceService {
                 workspacesOfUser.map(
                     async w =>
                         await w
-                            .populate('project')
+                            .populate({
+                                path: 'project',
+                                populate: {
+                                    path: 'mentor',
+                                    model: 'User',
+                                },
+                            })
                             .populate('members')
                             .execPopulate()
                 )
