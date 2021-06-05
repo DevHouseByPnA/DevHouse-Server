@@ -1,31 +1,42 @@
-const { TodoListService } = require('../services/todolist.service')
-const { TodoItemService } = require('../services/todoitem.service')
+const { TodoListService } = require('../services/todolist.service');
+const { TodoItemService } = require('../services/todoitem.service');
 const { WorkspaceService } = require('../services/workspace.service');
 
 class TodoController {
-
     static getAllTodos = async (req, res) => {
         try {
-            const { body: { workspaceId } } = req;
-            const todolist = await TodoListService.getTodoListByWorkspaceId(workspaceId);
-            const todos = await TodoItemService.getAllTodos(todolist.id)
+            const {
+                params: { workspaceId },
+            } = req;
+            console.log(req.params);
+            const todolist = await TodoListService.getTodoListByWorkspaceId(
+                workspaceId
+            );
+            const todos = await TodoItemService.getAllTodos(todolist.id);
             return res.status(200).json({
                 todos,
             });
         } catch (error) {
+            console.log(error);
             return res.status(500).json({
                 error: {
                     message: error.message,
                 },
             });
         }
-    }
+    };
 
     static createTodo = async (req, res) => {
         try {
-            const { user: { uid }, body: { description, status, workspaceId } } = req;
+            const {
+                user: { uid },
+                body: { description, status },
+                params: { workspaceId },
+            } = req;
 
-            const workspace = await WorkspaceService.getWorkspaceById(workspaceId);
+            const workspace = await WorkspaceService.getWorkspaceById(
+                workspaceId
+            );
 
             if (workspace.project.mentor.authId !== uid) {
                 return res.status(403).json({
@@ -35,13 +46,18 @@ class TodoController {
                 });
             }
 
-            const todolist = await TodoListService.getTodoListByWorkspaceId(workspaceId);
-            const todo = await TodoItemService.createTodo(todolist.id, description, status);
+            const todolist = await TodoListService.getTodoListByWorkspaceId(
+                workspaceId
+            );
+            const todo = await TodoItemService.createTodo(
+                todolist.id,
+                description,
+                status
+            );
             return res.status(201).json({
                 todo,
-                message: "Todo Created!"
+                message: 'Todo Created!',
             });
-
         } catch (error) {
             return res.status(500).json({
                 error: {
@@ -49,13 +65,19 @@ class TodoController {
                 },
             });
         }
-    }
+    };
 
     static updateTodo = async (req, res) => {
         try {
-            const { user: { uid }, body: { description, status, workspaceId } } = req;
+            const {
+                user: { uid },
+                body: { description, status },
+                params: { workspaceId, todoId },
+            } = req;
 
-            const workspace = await WorkspaceService.getWorkspaceById(workspaceId);
+            const workspace = await WorkspaceService.getWorkspaceById(
+                workspaceId
+            );
 
             if (workspace.project.mentor.authId !== uid) {
                 return res.status(403).json({
@@ -65,13 +87,14 @@ class TodoController {
                 });
             }
 
-            const todolist = await TodoListService.getTodoListByWorkspaceId(workspaceId);
-            const todo = await TodoItemService.updateTodo(todolist.id, { description, status });
+            const todo = await TodoItemService.updateTodo(todoId, {
+                description,
+                status,
+            });
             return res.status(200).json({
                 todo,
-                message: "Todo Updated!"
+                message: 'Todo Updated!',
             });
-
         } catch (error) {
             return res.status(500).json({
                 error: {
@@ -79,9 +102,9 @@ class TodoController {
                 },
             });
         }
-    }
+    };
 }
 
 module.exports = {
-    TodoController
-}
+    TodoController,
+};
